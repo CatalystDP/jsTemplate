@@ -1,38 +1,94 @@
 (function($,f) {
-    var lastDiv,divArr,option, i=0,length;
-    function changeDisplay(current){
-        $(divArr).css("display","none");
+    var divArr,divs,option, i=0,length;
+    function changeDisplayBlock(current){
        current.css("display","block");
     }
-    function changeOpacity(current){
-        current.animate({opacity:1},option.speed,option.easing);
+    function changeDisplayNone(c){
+        c.css("display","none");
     }
-    function restoreOpacity(){
-        if(lastDiv!=undefined)
-            lastDiv.css("opacity",0);
+    function changeOpacity(current,callback){
+        current.animate({opacity:1},option.speed,option.easing,callback);
+    }
+    function restoreOpacity(c){
+        c.css("opacity",0);
     }
     function step(num){
         num=num||1;
         i+=num;
         if(i>(length-1))
             i=0;
+        if(i<0)
+            i=length-1;
     }
-    function autoSwitchPic(){
+    /*function autoSwitchPic(s){
         var c=$(divArr[i]);
+
         changeDisplay(c);
         restoreOpacity();
-        changeOpacity(c);
-        lastDiv=c;
-        step();
+        changeOpacity(c,function(){
+            lastDiv=c;
+            step(s);
+        });
+
+    }*/
+
+    function nextPic(callback){
+        var c=$(divArr[i]),n;
+        n=(i==length-1)? $(divArr[0]):$(divArr[i+1]);
+        restoreOpacity(c);
+        changeDisplayBlock(n);
+        changeOpacity(n,function(){
+            changeDisplayNone(c);
+            step();
+            callback();
+        });
+    }
+    function prevPic(callback){
+        var c=$(divArr[i]),p;
+        p=(i==0)? $(divArr[length-1]):$(divArr[i-1]);
+        restoreOpacity(c);
+        changeDisplayBlock(p);
+        changeOpacity(p,function(){
+            changeDisplayNone(c);
+            step(-1);
+            callback();
+        });
     }
 	var Banner=function(){
-		var banner=this,
-            divs=banner.children();
-        divs.css({opacity:0,display:"none"}).
-            last().css({opacity:1,display:"block"});
+		var banner=this,intV;
+        divs=banner.children();
+        divs.css({opacity:0,display:"none"}).last().
+            css({opacity:1,display:"block"});
         length=divs.length;
         divArr=Array.prototype.slice.call(divs,0).reverse();
-        var intV=setInterval(autoSwitchPic,option.delay);
+
+        var clickEnable=true;
+        intV=setInterval(autoSwitchPic,option.delay);
+        $("#banner-key-prev").on("click",function(e){
+            clearInterval(intV);
+            if(clickEnable){
+                clickEnable=false;
+                prevPic(function(){
+                    clickEnable=true;
+                    intV=setInterval(autoSwitchPic,option.delay);
+                });
+            }
+        });
+        $("#banner-key-next").on("click",function(e){
+            clearInterval(intV);
+            if(clickEnable){
+                clickEnable=false;
+                nextPic(function(){
+                    clickEnable=true;
+                    intV=setInterval(autoSwitchPic,option.delay);
+                });
+            }
+
+        });
+        function autoSwitchPic(){
+            clickEnable=false;
+            nextPic(function(){clickEnable=true});
+        }
     };
 
 	$.fn.bannerFade = function(op) {
