@@ -100,7 +100,7 @@
 			keys:f,
 			dots:f
 		};
-		if (option ===undefined)
+		if (op ===undefined)
 			option = defaultOp;
 		else
 			option = $.extend(defaultOp, op);
