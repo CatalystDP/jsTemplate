@@ -64,30 +64,31 @@
 
         var clickEnable=true;
         intV=setInterval(autoSwitchPic,option.delay);
+        var enableClick=function(){
+            clickEnable=true;
+            intV=setInterval(autoSwitchPic,option.delay);
+            },
+            autoEnableClick=function(){
+                clickEnable=true;
+            };
         $("#banner-key-prev").on("click",function(e){
             clearInterval(intV);
             if(clickEnable){
                 clickEnable=false;
-                prevPic(function(){
-                    clickEnable=true;
-                    intV=setInterval(autoSwitchPic,option.delay);
-                });
+                prevPic(enableClick);
             }
         });
         $("#banner-key-next").on("click",function(e){
             clearInterval(intV);
             if(clickEnable){
                 clickEnable=false;
-                nextPic(function(){
-                    clickEnable=true;
-                    intV=setInterval(autoSwitchPic,option.delay);
-                });
+                nextPic(enableClick);
             }
 
         });
         function autoSwitchPic(){
             clickEnable=false;
-            nextPic(function(){clickEnable=true});
+            nextPic(autoEnableClick);
         }
     };
 
