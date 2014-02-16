@@ -181,5 +181,11 @@
             return this;
         };//移除一个事件
     })();//Events类
-
+    (function(){
+        dm.SandBox=function(factory){
+            if(typeof factory!="function")
+                return false;
+            factory.call(null);
+        };
+    })();//沙箱类
 })(window, $);//基于导入全局变量
