@@ -65,9 +65,28 @@
 
         var domP = DomMap.prototype;
         domP.insertMap = function (domName, selector) {
-            this.dMap[domName] = selector;
+            var args = Array.prototype.slice.call(arguments, 0),
+                length = args.length;
+            if (length == 1 && (typeof args[0] == "object")){
+                for(var p in args[0])
+                    this.dMap[p]=args[0][p];
+                return this;
+            }//以对象形式传入
+            this.dMap[domName] = selector;//单独传入
             return this;
         };
+        domP.returnMap=function(){
+            var args=Array.prototype.slice.call(arguments,0),
+                length=args.length;
+            var o;
+            if(length==1&&(Object.prototype.toString.call(args[0])=="[object Array]")){
+                o={};
+                for(var i= 0,j=args[0].length;i<j;i++)
+                    o[args[0][i]]=this.dMap[args[0][i]];
+                return o;
+            }
+            return this.dMap[args[0]];
+        }
         domP.removeMap = function (domName) {
             delete this.dMap[domName];
             return this;
@@ -109,7 +128,7 @@
             var f, _ = this;
             args.shift();
             if ((f = _[name]) != undefined) {
-                if(args.length==1&&(typeof args[0]=="function"))
+                if (args.length == 1 && (typeof args[0] == "function"))
                     f(args[0]);
                 else
                     f();
@@ -181,9 +200,9 @@
             return this;
         };//移除一个事件
     })();//Events类
-    (function(){
-        dm.SandBox=function(factory){
-            if(typeof factory!="function")
+    (function () {
+        dm.SandBox = function (factory) {
+            if (typeof factory != "function")
                 return false;
             factory.call(null);
         };
