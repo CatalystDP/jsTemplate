@@ -201,22 +201,21 @@
         };//移除一个事件
     })();//Events类
     (function () {
-        dm.SandBox = function (factory) {
+        dm.SandBox = function () {
             var args=Array.prototype.slice.call(arguments,0),
                 callback,
                 length=args.length;
-            if (typeof factory != "function")
-                return false;
             if(length==1){
                 //此时是有factory参数为一个无参匿名函数
-                factory.call(null);
+                callback=args.pop();
+                callback();
             }
-            else if(length==2&&(Object.prototype.toString.call(args[1])=="[object Array]")){
-                callback=args.shift();
+            else if(length==2&&(Object.prototype.toString.call(args[0])=="[object Array]")){
+                callback=args.pop();
                 callback.apply(null,args[0]);
             }
             else{
-                callback=args.shift();
+                callback=args.pop();
                 callback.apply(null,args);
             }
         };
