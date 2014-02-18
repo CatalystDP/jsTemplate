@@ -202,9 +202,23 @@
     })();//Events类
     (function () {
         dm.SandBox = function (factory) {
+            var args=Array.prototype.slice.call(arguments,0),
+                callback,
+                length=args.length;
             if (typeof factory != "function")
                 return false;
-            factory.call(null);
+            if(length==1){
+                //此时是有factory参数为一个无参匿名函数
+                factory.call(null);
+            }
+            else if(length==2&&(Object.prototype.toString.call(args[1])=="[object Array]")){
+                callback=args.shift();
+                callback.apply(null,args[0]);
+            }
+            else{
+                callback=args.shift();
+                callback.apply(null,args);
+            }
         };
     })();//沙箱类
 })(window, $);//基于导入全局变量
