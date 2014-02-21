@@ -7,7 +7,7 @@
     };
     function validator() {
         this.fn=validator.prototype;//对原型进行扩展
-        this.instance={};//基于对象的扩展;
+        this.instance=this;//基于对象的扩展;
     }
 
     p = validator.prototype;
