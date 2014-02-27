@@ -204,20 +204,22 @@
         dm.SandBox = function () {
             var args=Array.prototype.slice.call(arguments,0),
                 callback,
-                length=args.length;
+                length=args.length,
+                r;
             if(length==1){
                 //此时是有factory参数为一个无参匿名函数
                 callback=args.pop();
-                callback();
+                r=callback();
             }
             else if(length==2&&(Object.prototype.toString.call(args[0])=="[object Array]")){
                 callback=args.pop();
-                callback.apply(null,args[0]);
+                r=callback.apply(null,args[0]);
             }
             else{
                 callback=args.pop();
-                callback.apply(null,args);
+                r=callback.apply(null,args);
             }
+            return r||window.undefined;
         };
     })();//沙箱类
 })(window, $);//基于导入全局变量
