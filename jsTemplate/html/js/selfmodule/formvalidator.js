@@ -61,12 +61,12 @@
             length = args.length,
             tmp, i,j;
         if (length == 1) {
-            if (typeof args[0] == "string")
-                delete this.mapOfvalidator[eval(args[0])];
+            if (typeof args[0] == "object")
+                delete this.mapOfvalidator[args[0]];
             if (Object.prototype.toString.call(args[0]) == "[object Array]") {
                 tmp=args[0];
                 for(i=0,j=tmp.length;i<j;i++)
-                    delete this.mapOfvalidator[eval(tmp[i])];
+                    delete this.mapOfvalidator[tmp[i]];
             }
         }
     }
