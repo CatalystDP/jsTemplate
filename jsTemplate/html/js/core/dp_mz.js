@@ -196,6 +196,12 @@
             return this;
         };//触发一个事件
         ep.off = function (events) {
+            var c=this._callbacks;
+            if(!events){
+                for(var p in c)
+                    delete c[p];
+                return this;
+            }
             delete this._callbacks[events];
             return this;
         };//移除一个事件
@@ -204,22 +210,20 @@
         dm.SandBox = function () {
             var args=Array.prototype.slice.call(arguments,0),
                 callback,
-                length=args.length,
-                r;
+                length=args.length;
             if(length==1){
                 //此时是有factory参数为一个无参匿名函数
                 callback=args.pop();
-                r=callback();
+                callback();
             }
             else if(length==2&&(Object.prototype.toString.call(args[0])=="[object Array]")){
                 callback=args.pop();
-                r=callback.apply(null,args[0]);
+                callback.apply(null,args[0]);
             }
             else{
                 callback=args.pop();
-                r=callback.apply(null,args);
+                callback.apply(null,args);
             }
-            return r||window.undefined;
         };
     })();//沙箱类
 })(window, $);//基于导入全局变量
