@@ -17,7 +17,7 @@
         return ((str == "") || (str.match(reg) != null)) ? true : false;
     };
     p.isLegal = function (str, reg) {
-        reg = reg || /\W+|SELECT|INSERT|UPDATE|CREATE|DROP|DELETE/gi;
+        reg = reg || /\W+|SELECT|INSERT|UPDATE|CREATE|DROP|DELETE|null/gi;
         return str.match(reg) == null ? true : false;
     };
     p.config = function (method, func) {
