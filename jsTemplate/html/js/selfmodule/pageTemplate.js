@@ -9,9 +9,9 @@
          * @param data object 要替换成的变量键值对键名为模板里的变量名*/
         var regExp = /\{\%\=[\w]+\%\}/g,
             replaced;
-        return str.replace(regExp,function(s){
-            var t= s.split("%")[1].replace("=","");
-            s=data[t]? data[t]:"";
+        return str.replace(regExp, function (s) {
+            var t = s.split("%")[1].replace("=", "");
+            s = data[t] ? data[t] : "";
             return s;
         });
     }

@@ -16,6 +16,7 @@
     (function () {
         dm.klass = function (Parent, props) {
             var Child, i;
+            var F;
             Child = function () {
                 if (Child.superKlass && Child.superKlass.hasOwnProperty("__construct")) {
                     Child.superKlass.__construct.apply(this, arguments);
@@ -29,11 +30,14 @@
             Parent = Parent || Object;
             if (Parent !== Object) {
                 if (typeof Parent == "object") {
-                    Child.prototype = Parent;
+                    F = function () {
+                    };
+                    F.prototype = Parent;
+                    Child.prototype = new F();
                     Child.superKlass = Parent;
                 }
                 else if (typeof Parent == "function") {
-                    var F = function () {
+                    F = function () {
                     };
                     F.prototype = Parent.prototype;
                     Child.prototype = new F();
@@ -67,22 +71,22 @@
         domP.insertMap = function (domName, selector) {
             var args = Array.prototype.slice.call(arguments, 0),
                 length = args.length;
-            if (length == 1 && (typeof args[0] == "object")){
-                for(var p in args[0])
-                    this.dMap[p]=args[0][p];
+            if (length == 1 && (typeof args[0] == "object")) {
+                for (var p in args[0])
+                    this.dMap[p] = args[0][p];
                 return this;
             }//以对象形式传入
             this.dMap[domName] = selector;//单独传入
             return this;
         };
-        domP.returnMap=function(){
-            var args=Array.prototype.slice.call(arguments,0),
-                length=args.length;
+        domP.returnMap = function () {
+            var args = Array.prototype.slice.call(arguments, 0),
+                length = args.length;
             var o;
-            if(length==1&&(Object.prototype.toString.call(args[0])=="[object Array]")){
-                o={};
-                for(var i= 0,j=args[0].length;i<j;i++)
-                    o[args[0][i]]=this.dMap[args[0][i]];
+            if (length == 1 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
+                o = {};
+                for (var i = 0, j = args[0].length; i < j; i++)
+                    o[args[0][i]] = this.dMap[args[0][i]];
                 return o;
             }
             return this.dMap[args[0]];
@@ -196,9 +200,9 @@
             return this;
         };//触发一个事件
         ep.off = function (events) {
-            var c=this._callbacks;
-            if(!events){
-                for(var p in c)
+            var c = this._callbacks;
+            if (!events) {
+                for (var p in c)
                     delete c[p];
                 return this;
             }
@@ -208,21 +212,21 @@
     })();//Events类
     (function () {
         dm.SandBox = function () {
-            var args=Array.prototype.slice.call(arguments,0),
+            var args = Array.prototype.slice.call(arguments, 0),
                 callback,
-                length=args.length;
-            if(length==1){
+                length = args.length;
+            if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
-                callback=args.pop();
+                callback = args.pop();
                 callback();
             }
-            else if(length==2&&(Object.prototype.toString.call(args[0])=="[object Array]")){
-                callback=args.pop();
-                callback.apply(null,args[0]);
+            else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
+                callback = args.pop();
+                callback.apply(null, args[0]);
             }
-            else{
-                callback=args.pop();
-                callback.apply(null,args);
+            else {
+                callback = args.pop();
+                callback.apply(null, args);
             }
         };
     })();//沙箱类

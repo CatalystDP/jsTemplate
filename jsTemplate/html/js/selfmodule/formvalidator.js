@@ -33,32 +33,32 @@
         for (var p in func)
             self[method][p] = func[p];
     };
-    p.addValidatorMap = function (name,dom,fun) {
+    p.addValidatorMap = function (name, dom, fun) {
         /*
          * 1.@param object  {表单对象：验证器}验证器类型为数组元素为Function类型
          * 2.@param [object],[array] obeject:表单对象,array:内部元素为Function类型,验证器函数*/
         var args = Array.prototype.slice.call(arguments, 0),
             length = args.length;
         var tmp;
-        dom.validate=fun;
-        this.mapOfvalidator[name]=dom;
+        dom.validate = fun;
+        this.mapOfvalidator[name] = dom;
     };
     p.removeValidatorMap = function () {
-        var t=this.mapOfvalidator;
-        if(!arguments[0]){
-            for(var p in t)
+        var t = this.mapOfvalidator;
+        if (!arguments[0]) {
+            for (var p in t)
                 delete t[p];
             return;
         }
         var args = Array.prototype.slice.call(arguments, 0),
             length = args.length,
-            tmp, i,j;
+            tmp, i, j;
         if (length == 1) {
             if (typeof args[0] == "string")
                 delete this.mapOfvalidator[args[0]];
             if (Object.prototype.toString.call(args[0]) == "[object Array]") {
-                tmp=args[0];
-                for(i=0,j=tmp.length;i<j;i++)
+                tmp = args[0];
+                for (i = 0, j = tmp.length; i < j; i++)
                     delete this.mapOfvalidator[tmp[i]];
             }
         }
