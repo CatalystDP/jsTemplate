@@ -112,19 +112,21 @@
             if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
                 callback = args.pop();
-                callback.call(ex);
+                callback.call(null);
             } else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
                 callback = args.pop();
-                callback.apply(ex, args[0]);
+                args[0].push(ex);
+                callback.apply(null,args[0]);
             } else {
                 callback = args.pop();
-                callback.apply(ex, args);
+                args.push(ex);
+                callback.apply(null, args);
             }
             return ex.exports || ex;
         };
     })(); //沙箱类
     var r = {
-        addRouter:function(name, args, factory) {
+        addRouter:function(name,factory) {
             /*
              * 1、[@param String routerName 路由名称
              * @param Array arglist 传递给factory参数列表
@@ -136,31 +138,20 @@
              * @return Object this 返回当前对象;
              * */
             var routerStore = this.routerStore;
-            var argList = Array.prototype.slice.call(arguments, 0);
+            var SandBox=dm.SandBox;
+            var args = Array.prototype.slice.call(arguments, 0);
             var i, j, currentList;
-            if (argList.length == 1 && (Object.prototype.toString.call(argList[0]) == "[object Array]")) {
-                for (i = 0, j = argList[0].length; i < j; i++) {
-                    currentList = argList[0][i];
-                    if (currentList.args && (currentList.args.length != 0))
-                        routerStore[currentList.name] = dm.SandBox(currentList.args, currentList.factory);
-                    else
-                        routerStore[currentList.name] = dm.SandBox(currentList.factory);
+            if (args.length == 1 && (Object.prototype.toString.call(args[0]) == "[object Object]")) {
+                for(var p in args[0])
+                {
+                    routerStore[p]=SandBox(this,args[0][p]);
                 }
                 return this;
             } //参数demo [{name:'',args:[],factory:function(){}}]
-            if (typeof args == "function") {
-                factory = args;
-                routerStore[name] = dm.SandBox(factory);
+            if (args.length==2) {
+                routerStore[name]=SandBox(this,factory);
                 return this;
             }
-            if (Object.prototype.toString.call(args) == "[object Array]") {
-                if (args.length != 0)
-                    routerStore[name] = dm.SandBox(args, factory);
-                else
-                    routerStore[name] = dm.SandBox(factory);
-            }
-
-            return this;
         },//内部封装Sandbox,factory中上下文环境既this所指向的是Sanbox中的导出对象
         removeRouter:function() {
             var p, routerStore = this.routerStore,
@@ -389,9 +380,9 @@
                     length = args[0].length;
                 var renderStore = this.renderStore;
                 var i, j;
-                if (Object.prototype.toString.call(args[0]) == "[object Array]") {
-                    for (i = 0, j = length; i < j; i++)
-                        renderStore[args[0][i].name] = args[0][i].render;
+                if (Object.prototype.toString.call(args[0]) == "[object Object]") {
+                    for (var p in args[0])
+                        renderStore[p] = args[0][p];
                     return this;
                 }
                 if (args.length == 2) {
