@@ -128,13 +128,10 @@
     var r = {
         addRouter:function(name,factory) {
             /*
-             * 1、[@param String routerName 路由名称
-             * @param Array arglist 传递给factory参数列表
-             * @param Function factory 沙箱函数参数为arglist传递]
-             *
-             * 2、[@param Array [{name:'',args:[],factory:function(){}}]
-             *       数组里可放多个对象
-             * ]
+             * @param String name 路由名称
+             * @param Function factory 路由函数;
+                该函数需要两个形参context：对当前this的引用，
+                ex,对SandBox内部的ex对象的引用
              * @return Object this 返回当前对象;
              * */
             var routerStore = this.routerStore;
@@ -147,12 +144,12 @@
                     routerStore[p]=SandBox(this,args[0][p]);
                 }
                 return this;
-            } //参数demo [{name:'',args:[],factory:function(){}}]
+            } //
             if (args.length==2) {
                 routerStore[name]=SandBox(this,factory);
                 return this;
             }
-        },//内部封装Sandbox,factory中上下文环境既this所指向的是Sanbox中的导出对象
+        },//
         removeRouter:function() {
             var p, routerStore = this.routerStore,
                 tmp;
