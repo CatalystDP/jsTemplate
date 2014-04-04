@@ -65,6 +65,8 @@
     var Banner = function () {
         var banner = this, intV;
         divs = banner.children();
+        if(divs.length==1)
+            return;
         divs.css({opacity: 0, display: "none"}).last().
             css({opacity: 1, display: "block"});
         length = divs.length;

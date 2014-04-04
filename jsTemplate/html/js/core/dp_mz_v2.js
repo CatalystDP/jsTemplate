@@ -3,7 +3,7 @@
         alert("jQuery未加载");
         return;
     }
-    var dm = root.dm = {}; //向全局对象添加dm属性
+    var dm = root.dm = function(){}; //向全局对象添加dm属性
     if (!root.Object.create)
         dm.create = function(o) {
             var F = function() {};
@@ -104,7 +104,8 @@
     (function() {
         dm.SandBox = function() {
             /*
-             * @param */
+             * 参数至少包含一个factory函数，
+             * 且factory至少包含一个参数用于导出，放在最后面*/
             var args = Array.prototype.slice.call(arguments, 0),
                 callback,
                 length = args.length;
@@ -112,7 +113,7 @@
             if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
                 callback = args.pop();
-                callback.call(null);
+                callback.call(null,ex);
             } else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
                 callback = args.pop();
                 args[0].push(ex);
@@ -481,4 +482,7 @@
             return false;
         }
     })(); //绑定函数,用于绑定视图与控制器，模型与控制器
+    (function(){
+        this.dm.libs={};
+    })();//
 })(window, $); //基于导入全局变量

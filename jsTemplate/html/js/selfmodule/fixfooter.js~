@@ -1,4 +1,4 @@
-var bodyHeight=$("body").height(),
+var bodyHeight=$(body).height(),
                    	htmlHeight=$("html").height();
                     var footer=$("#footer");
                     if(bodyHeight<htmlHeight)
