@@ -11,6 +11,10 @@ define(function (require, exports, module) {
         }
     };
     function run() {
+        require("js/selfmodule/banner-swap.js");
+        var prev=body.find(".js-prev-btn"),
+            next=prev.siblings(".js-next-btn");
+        $(".banner").bannerSwap({duration:800,prev:prev,next:next});
         var effect = require("./effect.js");
         effect.init(body);//启动effect.js
         var viewCollection = {};

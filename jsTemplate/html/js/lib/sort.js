@@ -93,7 +93,11 @@
                 return result;
             }
         })(),
-        mergeSort:(function(){
+        quickSort:(function(){
+            function partition(arr,p,r){
+                var x, i,j;
+                x=arr
+            }
             return function(arr){
 
             }
