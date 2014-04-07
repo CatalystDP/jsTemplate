@@ -515,8 +515,8 @@
                 t=args;
             }
             for(var i= 0,j=args.length;i<j;i++){
-                if(libs[i])
-                    delete libs[i];
+                if(libs[t[i]])
+                    delete libs[t[i]];
             }
         };
         dm.useLib=function(name){
