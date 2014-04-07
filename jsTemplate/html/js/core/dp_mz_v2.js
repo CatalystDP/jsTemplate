@@ -17,12 +17,16 @@
             var Child, i;
             var F;
             Child = function() {
-                if (Child.superKlass && Child.superKlass.hasOwnProperty("__construct")) {
-                    Child.superKlass.__construct.apply(this, arguments);
-                    //Child.superKlass指向parent的原型
-                }
+                /*Child函数内必须手动调用构造函数*/
                 if (Child.prototype.hasOwnProperty("__construct")) {
                     Child.prototype.__construct.apply(this, arguments);
+                }
+                else
+                {
+                    if (Child.superKlass && Child.superKlass.hasOwnProperty("__construct")) {
+                        Child.superKlass.__construct.apply(this, arguments);
+                        //Child.superKlass指向parent的原型
+                    }
                 }
             };
             //构造函数内判断__construct
@@ -38,6 +42,7 @@
                     F.prototype = Parent.prototype;
                     Child.prototype = new F();
                     Child.superKlass = Parent.prototype;
+
                 }
             }
             //    继承
@@ -483,6 +488,40 @@
         }
     })(); //绑定函数,用于绑定视图与控制器，模型与控制器
     (function(){
-        this.dm.libs={};
+        var libs=dm.libs={};
+        dm.registLib=function(){
+            if(arguments.length==0)
+                return false;
+            var args=Array.prototype.slice.call(arguments,0);
+            if(args.length==1&&(Object.prototype.toString.call(args[0])=="[object Object]"))
+            {
+                for(var p in args[0])
+                    libs[p]=args[0][p];
+            }
+            if(args.length==2&&(typeof args[0]=="string"))
+            {
+                libs[args[0]]=args[1];
+            }
+        };
+        dm.removeLib=function(){
+            var args=Array.prototype.slice.call(arguments,0);
+            var t;
+            if(Object.prototype.toString.call(args[0])=="[object Array]")
+            {
+                t=args[0];
+            }
+            if(typeof args[0]=="string")
+            {
+                t=args;
+            }
+            for(var i= 0,j=args.length;i<j;i++){
+                if(libs[i])
+                    delete libs[i];
+            }
+        };
+        dm.useLib=function(name){
+            /*@param string name 库的名字*/
+            return libs[name]? libs[name]:root.undefined;
+        }
     })();//
 })(window, $); //基于导入全局变量

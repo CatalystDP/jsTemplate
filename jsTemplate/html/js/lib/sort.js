@@ -103,7 +103,7 @@
             }
         })()
     };
-    var sort = dm.libs.sort = function (method) {
+    var sort = function (method) {
         /*@param string method 选择排序方法
          * @return 返回的结果为调用的排序方法对应的返回值*/
         var args = Array.prototype.slice.call(arguments, 0);
@@ -112,5 +112,5 @@
         var r = s[m];
         return r;
     };
-
+    dm.registLib("sort",sort);
 })(dm);
