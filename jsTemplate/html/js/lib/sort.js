@@ -36,7 +36,7 @@
                 maxHeap: function (arr, i) {
                     var k, l, r, largest = null, temp;
                     var status;
-                    var heapSize=arr.length;
+                    var heapSize = arr.length;
                     k = i;
                     status = true;
                     while (status) {
@@ -64,7 +64,7 @@
                         node = Math.floor((heapSize - 1) / 2),
                         i, j;
                     for (i = node, j = 0; i >= j; i--) {
-                        utils.maxHeap(arr,i);
+                        utils.maxHeap(arr, i);
                     }
                 },
                 minHeap: function (arr, i) {
@@ -79,27 +79,53 @@
                  * @param string method 构建堆方式默认为最大堆[optional] max min*/
                 func = func || undefined;
                 method = method || "max";
-                if(method=="max")
+                if (method == "max")
                     utils["buildMaxHeap"](arr);
-                var i, j,length=arr.length;
-                var temp,result=[];
-                for(i=length-1,j=0;i>=j;i--){
-                    temp=arr[0];
-                    arr[0]=arr[i];
-                    arr[i]=temp;
+                var i, j, length = arr.length;
+                var temp, result = [];
+                for (i = length - 1, j = 0; i >= j; i--) {
+                    temp = arr[0];
+                    arr[0] = arr[i];
+                    arr[i] = temp;
                     result.unshift(arr.pop());
-                    utils.maxHeap(arr,0);
+                    utils.maxHeap(arr, 0);
                 }
                 return result;
             }
         })(),
-        quickSort:(function(){
-            function partition(arr,p,r){
-                var x, i,j;
-                x=arr
+        quickSort: (function () {
+            function partition(arr, p, r) {
+                var x, i, j;
+                x = arr[r];
+                i = p - 1;
+                var temp;
+                var temp2;
+                for (j = p; j < r; j++) {
+                    if (arr[j] < x) {
+                        i += 1;
+                        temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+                temp2 = arr[i + 1];
+                arr[i + 1] = arr[r];
+                arr[r]=temp2;
+                return i+1;
             }
-            return function(arr){
 
+            function __qucikSort(arr, p, r) {
+                var q;
+                if (p < r) {
+                    q = partition(arr, p, r);
+                    (arguments.callee)(arr, p, q - 1);
+                    (arguments.callee)(arr, q + 1, r);
+                }
+            }
+
+            return function (arr) {
+                var p = 0, r = arr.length - 1;
+                __qucikSort(arr, p, r);
             }
         })()
     };
@@ -112,5 +138,5 @@
         var r = s[m];
         return r;
     };
-    dm.registLib("sort",sort);
+    dm.registLib("sort", sort);
 })(dm);

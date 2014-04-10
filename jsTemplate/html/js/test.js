@@ -1,4 +1,4 @@
-var heapSort=dm.libs.sort("heap");
+var quickSort=dm.useLib("sort")("quick");
 var a=[4,1,3,2,16,9,10,14,8,7];
-heapSort(a);
+quickSort(a);
 console.log(a);
