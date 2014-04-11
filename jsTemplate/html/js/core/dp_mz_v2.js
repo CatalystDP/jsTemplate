@@ -54,7 +54,23 @@
             }
             return Child;
         };
-
+        dm.klass.extends=function(currentClass,ex){
+            var toString=Object.prototype.toString;
+            var proto=currentClass.prototype,
+                p;
+            if(toString.call(ex)=="[object Object]")
+                for(p in ex){
+                    if(ex.hasOwnProperty(p))
+                        proto[p]=ex[p];
+                }
+            if(typeof ex=="function")
+            {
+                var _p=ex.prototype;
+                for(p in _p){
+                    proto[p]=_p[p];
+                }
+            }
+        };
     })();
     (function() {
         /*
