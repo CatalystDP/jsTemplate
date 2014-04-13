@@ -3,7 +3,7 @@
         alert("jQuery未加载");
         return;
     }
-    var dm = root.dm = function(){}; //向全局对象添加dm属性
+    var dm = root.dm = function() {}; //向全局对象添加dm属性
     if (!root.Object.create)
         dm.create = function(o) {
             var F = function() {};
@@ -20,9 +20,7 @@
                 /*Child函数内必须手动调用构造函数*/
                 if (Child.prototype.hasOwnProperty("__construct")) {
                     Child.prototype.__construct.apply(this, arguments);
-                }
-                else
-                {
+                } else {
                     if (Child.superKlass && Child.superKlass.hasOwnProperty("__construct")) {
                         Child.superKlass.__construct.apply(this, arguments);
                         //Child.superKlass指向parent的原型
@@ -54,20 +52,19 @@
             }
             return Child;
         };
-        dm.klass.extends=function(currentClass,ex){
-            var toString=Object.prototype.toString;
-            var proto=currentClass.prototype,
+        dm.klass.extend = function(currentClass, ex) {
+            var toString = Object.prototype.toString;
+            var proto = currentClass.prototype,
                 p;
-            if(toString.call(ex)=="[object Object]")
-                for(p in ex){
-                    if(ex.hasOwnProperty(p))
-                        proto[p]=ex[p];
+            if (toString.call(ex) == "[object Object]")
+                for (p in ex) {
+                    if (ex.hasOwnProperty(p))
+                        proto[p] = ex[p];
                 }
-            if(typeof ex=="function")
-            {
-                var _p=ex.prototype;
-                for(p in _p){
-                    proto[p]=_p[p];
+            if (typeof ex == "function") {
+                var _p = ex.prototype;
+                for (p in _p) {
+                    proto[p] = _p[p];
                 }
             }
         };
@@ -134,11 +131,11 @@
             if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
                 callback = args.pop();
-                callback.call(null,ex);
+                callback.call(null, ex);
             } else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
                 callback = args.pop();
                 args[0].push(ex);
-                callback.apply(null,args[0]);
+                callback.apply(null, args[0]);
             } else {
                 callback = args.pop();
                 args.push(ex);
@@ -148,7 +145,7 @@
         };
     })(); //沙箱类
     var r = {
-        addRouter:function(name,factory) {
+        addRouter: function(name, factory) {
             /*
              * @param String name 路由名称
              * @param Function factory 路由函数;
@@ -157,22 +154,21 @@
              * @return Object this 返回当前对象;
              * */
             var routerStore = this.routerStore;
-            var SandBox=dm.SandBox;
+            var SandBox = dm.SandBox;
             var args = Array.prototype.slice.call(arguments, 0);
             var i, j, currentList;
             if (args.length == 1 && (Object.prototype.toString.call(args[0]) == "[object Object]")) {
-                for(var p in args[0])
-                {
-                    routerStore[p]=SandBox(this,args[0][p]);
+                for (var p in args[0]) {
+                    routerStore[p] = SandBox(this, args[0][p]);
                 }
                 return this;
             } //
-            if (args.length==2) {
-                routerStore[name]=SandBox(this,factory);
+            if (args.length == 2) {
+                routerStore[name] = SandBox(this, factory);
                 return this;
             }
-        },//
-        removeRouter:function() {
+        }, //
+        removeRouter: function() {
             var p, routerStore = this.routerStore,
                 tmp;
             if (arguments.length == 0) {
@@ -184,12 +180,12 @@
                 length = args.length;
             if ((Object.prototype.toString.call(args[0]) == "[object Array]"))
                 tmp = args[0];
-            if (length >= 1 && (typeof args[0] == "string")) 
+            if (length >= 1 && (typeof args[0] == "string"))
                 tmp = args;
             for (var i = 0, j = tmp.length; i < j; i++)
                 delete routerStore[tmp[i]];
             return this;
-        }//父ROUTER，需要被view,controller,model继承
+        } //父ROUTER，需要被view,controller,model继承
     };
     (function() {
         var Controller = dm.klass(r, {
@@ -454,13 +450,14 @@
             /*@param[must] object controller 必须提供的参数
              *@param[must] object vom view or model 必须提供的参数
              *@param[optional] array 事件列表，支持以命名空间形式
+             * e.g:   a:b:c   or a:*(用来选择命名空间下所有事件)
              */
             /*
             当参数只有controller 和 vom 时为默认绑定整个事件表，
             当指定第三个参数为数组或传入3个以上的字符串列表作为参数时，
             绑定列表指定的事件
             */
-            var args, t,length;
+            var args, t, length;
             var i, j;
             if (arguments.length < 2)
                 return false;
@@ -472,72 +469,68 @@
                     t = args[0];
                 else if (typeof args[0] == "string")
                     t = args; //判断事件列表类型为多个字符串参数
-                if (t[0]=="*")
-                    return _bindAllEvents(controller,vom)? this:false;
+                if (t[0] == "*")
+                    return _bindAllEvents(controller, vom) ? this : false;
                 //绑定所有事件
                 else
-                    return _bindPartialEvents(controller,vom,t)? this:false;//绑定部分事件
+                    return _bindPartialEvents(controller, vom, t) ? this : false; //绑定部分事件
             } //判断事件列表类型为数组
-            if(arguments.length==2)
-                _bindAllEvents(controller,vom);
+            if (arguments.length == 2)
+                _bindAllEvents(controller, vom);
         };
 
         function _bindAllEvents(controller, vom) {
-            vom.events=controller.events;
+            vom.events = controller.events;
             return true;
-        }//绑定controller所有事件
-        function _bindPartialEvents(controller,vom,evList){
-            var e,c_e;
-            if(evList){
-                if(!vom.events)
-                    e=vom.events=dm.event.create();
+        } //绑定controller所有事件
+        function _bindPartialEvents(controller, vom, evList) {
+            var e, c_e;
+            if (evList) {
+                if (!vom.events)
+                    e = vom.events = dm.event.create();
                 else
-                    e=vom.events;
-                c_e=controller.events._callbacks;
-                for(var i=0,j=evList.length;i<j;i++){
-                    if(c_e.hasOwnProperty(evList[i]))
-                        e._callbacks[evList[i]]= c_e[evList[i]];
+                    e = vom.events;
+                c_e = controller.events._callbacks;
+                for (var i = 0, j = evList.length; i < j; i++) {
+                    if (c_e.hasOwnProperty(evList[i]))
+                        e._callbacks[evList[i]] = c_e[evList[i]];
                 }
                 return true;
             }
             return false;
         }
     })(); //绑定函数,用于绑定视图与控制器，模型与控制器
-    (function(){
-        var libs=dm.libs={};
-        dm.registLib=function(){
-            if(arguments.length==0)
+    (function() {
+        var libs = dm.libs = {};
+        dm.registLib = function() {
+            if (arguments.length == 0)
                 return false;
-            var args=Array.prototype.slice.call(arguments,0);
-            if(args.length==1&&(Object.prototype.toString.call(args[0])=="[object Object]"))
-            {
-                for(var p in args[0])
-                    libs[p]=args[0][p];
+            var args = Array.prototype.slice.call(arguments, 0);
+            if (args.length == 1 && (Object.prototype.toString.call(args[0]) == "[object Object]")) {
+                for (var p in args[0])
+                    libs[p] = args[0][p];
             }
-            if(args.length==2&&(typeof args[0]=="string"))
-            {
-                libs[args[0]]=args[1];
+            if (args.length == 2 && (typeof args[0] == "string")) {
+                libs[args[0]] = args[1];
             }
         };
-        dm.removeLib=function(){
-            var args=Array.prototype.slice.call(arguments,0);
+        dm.removeLib = function() {
+            var args = Array.prototype.slice.call(arguments, 0);
             var t;
-            if(Object.prototype.toString.call(args[0])=="[object Array]")
-            {
-                t=args[0];
+            if (Object.prototype.toString.call(args[0]) == "[object Array]") {
+                t = args[0];
             }
-            if(typeof args[0]=="string")
-            {
-                t=args;
+            if (typeof args[0] == "string") {
+                t = args;
             }
-            for(var i= 0,j=args.length;i<j;i++){
-                if(libs[t[i]])
+            for (var i = 0, j = args.length; i < j; i++) {
+                if (libs[t[i]])
                     delete libs[t[i]];
             }
         };
-        dm.useLib=function(name){
+        dm.useLib = function(name) {
             /*@param string name 库的名字*/
-            return libs[name]? libs[name]:root.undefined;
+            return libs[name] ? libs[name] : root.undefined;
         }
-    })();//
+    })(); //
 })(window, $); //基于导入全局变量
