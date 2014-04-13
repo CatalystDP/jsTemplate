@@ -127,21 +127,17 @@
             var args = Array.prototype.slice.call(arguments, 0),
                 callback,
                 length = args.length;
-            var ex = {}; //导出对象
             if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
                 callback = args.pop();
-                callback.call(null, ex);
+                return callback.call(null, ex);
             } else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
                 callback = args.pop();
-                args[0].push(ex);
-                callback.apply(null, args[0]);
+                return callback.apply(null, args[0]);
             } else {
                 callback = args.pop();
-                args.push(ex);
-                callback.apply(null, args);
+                return callback.apply(null, args);
             }
-            return ex.exports || ex;
         };
     })(); //沙箱类
     var r = {
@@ -149,8 +145,7 @@
             /*
              * @param String name 路由名称
              * @param Function factory 路由函数;
-                该函数需要两个形参context：对当前this的引用，
-                ex,对SandBox内部的ex对象的引用
+                该函数需要形参context：对当前this的引用
              * @return Object this 返回当前对象;
              * */
             var routerStore = this.routerStore;
