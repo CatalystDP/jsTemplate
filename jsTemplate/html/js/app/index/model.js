@@ -12,7 +12,7 @@ define(function (require, exports, module) {
     };
     function run() {
         var modelCollection = {};
-        require.async("js/lib/iterator");
+        
         //your code goes here
 
         return modelCollection;

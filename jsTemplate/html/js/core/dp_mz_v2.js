@@ -130,7 +130,7 @@
             if (length == 1) {
                 //此时是有factory参数为一个无参匿名函数
                 callback = args.pop();
-                return callback.call(null, ex);
+                return callback.call(null);
             } else if (length == 2 && (Object.prototype.toString.call(args[0]) == "[object Array]")) {
                 callback = args.pop();
                 return callback.apply(null, args[0]);
