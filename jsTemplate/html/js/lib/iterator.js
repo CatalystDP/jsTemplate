@@ -10,7 +10,7 @@
             this.arrLength=target.length;
         },
         hasNext:function(){
-        	return this.pointer<this.arrLength; 
+        	return (this.pointer==this.arrLength-1)? false:true; 
         },
         next:function(){
         	if(this.hasNext())
@@ -22,6 +22,12 @@
         	{
         		return null;
         	}
+        },
+        index:function(){
+        	return this.pointer;
+        },
+        count:function(){
+        	return this.arrLength;
         },
         rewind:function(){
         	this.pointer=0;
@@ -40,6 +46,12 @@
         	@param function factory 回调函数，用来处理每一个数组元素
         	factory可传入三个参数,1:当前元素,2:当前索引,3:当前数组
         	*/
+        	var len=this.arrLength,arr=this.targetArr;
+        	for(var i=0,j=len;i<j;i++)
+        	{
+        		factory(arr[i],i,arr);
+        	}
         }
     });
+	dm.registLib("iterator",Iterator);
 })(dm);

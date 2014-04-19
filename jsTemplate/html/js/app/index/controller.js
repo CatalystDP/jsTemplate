@@ -8,7 +8,8 @@ define(function (require, exports, module) {
     view.init(body);
     var model = require("./model");
     model.init(body);
-    require("js/lib/sort.js");
+    // require("js/lib/sort.js");
+    require("js/lib/iterator.js");
 
 
 
