@@ -390,9 +390,13 @@
                     length = args[0].length;
                 var renderStore = this.renderStore;
                 var i, j;
-                if (Object.prototype.toString.call(args[0]) == "[object Object]") {
-                    for (var p in args[0])
-                        renderStore[p] = args[0][p];
+                var t;
+                if (Object.prototype.toString.call(args[0]) == "[object Array]") {
+					t=args[0];
+                    for(i=0,j=t.length;i<j;i++)
+                    {
+                        renderStore[t[i].name]=t[i].render;
+                    }
                     return this;
                 }
                 if (args.length == 2) {
