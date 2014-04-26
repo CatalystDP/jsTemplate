@@ -4,7 +4,7 @@ define(function (require, exports, module) {
             require.async("js/core/dp_mz_v2.js", function () {
                 jQuery(function ($) {
 
-                    require.async("./controller.js");
+                    require.async("./main.js");
                 });
             });
         });
