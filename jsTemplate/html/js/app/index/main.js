@@ -1,5 +1,8 @@
 define(function(require,exports,module){
 	var $=jQuery,$dm=dm,
 		body=$("body");
-	console.log(body.find("#wrapper").attr("dp_mz"));
+	require("js/core/module");
+	$dm.module.require("js/app/index/test.js",function(module){
+		var c=module.use("C");
+	});
 });
