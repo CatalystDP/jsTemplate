@@ -23,7 +23,7 @@
         // this.currentDomObject.css("margin-left", "0");
         this.children.css("width", body.width());
         this.singleWidth = $(this.children[0]).width();
-        this.marginTable.splice(0);
+        this.marginTable.splice(0,this.marginTable.length);
         this.calculateWidth();
         this.autoSwap();
     };
@@ -109,7 +109,7 @@
         this.children().css("width", body.width() + "px");
         var s = new BannerSwap(this, op);
         s.startSwapPlugin();
-        $(window).on("resize", function() {
+        $(window).resize(function() {
             var interval = s.interVal;
             if (interval)
                 window.clearInterval(interval);
