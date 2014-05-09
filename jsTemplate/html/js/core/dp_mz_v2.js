@@ -386,16 +386,15 @@
                  * 1、@param Array [{name:string,render:function(selector,data){}}...]
                  * 2、@param string 渲染器名称
                  *    @param function 函数名*/
-                var args = Array.prototype.slice.call(arguments, 0),
-                    length = args[0].length;
+                var args = Array.prototype.slice.call(arguments, 0);
                 var renderStore = this.renderStore;
-                var i, j;
                 var t;
-                if (Object.prototype.toString.call(args[0]) == "[object Array]") {
-					t=args[0];
-                    for(i=0,j=t.length;i<j;i++)
-                    {
-                        renderStore[t[i].name]=t[i].render;
+                if (Object.prototype.toString.call(args[0]) == "[object Object]") {
+                    t=args[0];
+                    for(var p in t){
+                        if(t.hasOwnProperty(p)){
+                            renderStore[p]=t[p];
+                        }
                     }
                     return this;
                 }
