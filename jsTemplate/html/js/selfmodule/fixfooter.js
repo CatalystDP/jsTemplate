@@ -1,6 +1,6 @@
-var bodyHeight=$("body").height(),
+ var bodyHeight=$("body").height(),
                    	htmlHeight=$("html").height();
-                    var footer=$("#footer");
+                    var footer=$(".js-footer-wp");
                     if(bodyHeight<htmlHeight)
-                    	footer.addClass('l-footer-bottom');
+                    	footer.css({position:'absolute',bottom:'0px',zIndex:1});
 /*这段代码是复制到需要的地方进行单页面页脚贴底边的，根据需要修改*/
