@@ -1,4 +1,6 @@
 .l-pagination{
+  @common-page-size:35px;
+  @spc-page-width:60px;
   margin-top: 20px;
   width: 500px;
   height: 43px;
@@ -6,13 +8,12 @@
     li{
       float:left;
       margin-left: 25px;
-      width: 43px;
-      height: 43px;
+      width: @common-page-size;
+      height:@common-page-size;
       &.spc-page{
-        width: 60px;
+        width: @spc-page-width;
       }
       &.first-page{
-        width: 60px;
       }
       &.last-page{}
       &.prev-page{}
@@ -21,7 +22,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        line-height: 43px;
+        line-height: @common-page-size;
         text-align: center;
         vertical-align: middle;
       }
@@ -29,11 +30,12 @@
   }
 }
 .sk-pagination{
+  @font-color:#474747;
   ul{
     li{
       a{
         border: 2px solid #00bff3;
-        color:#474747;
+        color:@font-color;
       }
     }
   }
