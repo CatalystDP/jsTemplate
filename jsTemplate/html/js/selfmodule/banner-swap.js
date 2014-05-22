@@ -9,7 +9,7 @@
         this.currentDomObject = context;
         this.option = option;
         this.children = this.currentDomObject.children();
-        this.singleWidth = $('body').width();
+        this.singleWidth = context.width();
         this.marginTable = [];
         this.max = this.children.length;
         this.current = [0];
@@ -21,7 +21,7 @@
     } //创建bannerswap类
     proto.reCalculateWidth = function() {
         // this.currentDomObject.css("margin-left", "0");
-        this.children.css("width", body.width());
+        this.children.css("width", this.parent().css('width'));
         this.singleWidth = $(this.children[0]).width();
         this.marginTable.splice(0,this.marginTable.length);
         this.calculateWidth();
@@ -106,7 +106,7 @@
             op = defaultOption;
         if (this.children().length <= 1)
             return;
-        this.children().css("width", body.width() + "px");
+        this.children().css("width", this.parent().width() + "px");
         var s = new BannerSwap(this, op);
         s.startSwapPlugin();
         $(window).resize(function() {
