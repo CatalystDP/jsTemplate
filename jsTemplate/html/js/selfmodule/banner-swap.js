@@ -21,7 +21,7 @@
     } //创建bannerswap类
     proto.reCalculateWidth = function() {
         // this.currentDomObject.css("margin-left", "0");
-        this.children.css("width", this.parent().css('width'));
+        this.children.css("width", this.currentDomObject.parent().css('width'));
         this.singleWidth = $(this.children[0]).width();
         this.marginTable.splice(0,this.marginTable.length);
         this.calculateWidth();
