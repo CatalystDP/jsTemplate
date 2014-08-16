@@ -9,4 +9,6 @@ function fixFooter(){
     var footer=$(".js-footer-wp");
     if(containerHeight<=allHeight)
         footer.css({position:'absolute',bottom:'0px',zIndex:1});
+    else
+        footer.css({position:'static'});
 }

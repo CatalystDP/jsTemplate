@@ -1,9 +1,9 @@
 /**
  * Created by dp on 14-2-26.
  */
-(function (dm) {
-    var tmp = dm.pageTemplate = {};
-    tmp.strRender = function (str, data) {
+
+define(function (require,exports,module) {
+    module.exports = function (str, data) {
         /*
          * @param str String 要进行变量替换的字符串
          * @param data object 要替换成的变量键值对键名为模板里的变量名*/
@@ -15,4 +15,4 @@
             return s;
         });
     }
-})(dm);
+});

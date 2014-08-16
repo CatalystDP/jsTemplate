@@ -1,66 +1,123 @@
-(function (dm) {
+(function (dm, undefined) {
     var $dm = dm,
         p;
-    $dm.form = {};
-    $dm.form.create = function () {
-        return new validator();
-    };
+
     function validator() {
-        this.fn = validator.prototype;//对原型进行扩展
-        this.instance = this;//基于对象的扩展;
-        this.mapOfvalidator = {};//表单对象与验证器映射
+        this.checkConfig = {
+            'form': undefined,
+            'formchild': undefined,
+            'alert-icon': undefined,
+            'alert-sentence': undefined,
+            'submit': undefined,
+            'validateOnblur': true,
+            'ajax':false,
+            'url':''
+        };
     }
 
     p = validator.prototype;
-    p.hasSpace = function (str) {
+    p.spaceCheck = function (str) {
         var reg = /\s+/g;
-        return ((str == "") || (str.match(reg) != null)) ? true : false;
+        var status = ((str == "") || (str.match(reg) != null));
+        if (status)
+            return {status: false, msg: '不能包含空格'};
+        return {stauts: true};
     };
-    p.isLegal = function (str, reg) {
-        reg = reg || /\W+|SELECT|INSERT|UPDATE|CREATE|DROP|DELETE|null/gi;
-        return str.match(reg) == null ? true : false;
-    };
-    p.config = function (method, func) {
+    p.lengthCheck = function (str, min, max) {
         /*
-         * method:""，扩展方式选择fn或instance,fn是对原型进行扩展,instance对对象进行扩展,
-         * option是一个对象{
-         *
-         *   函数名:function(){},需要扩展的函数
-         * }*/
-        var self = this;
-        if (Object.prototype.toString.call(func) != "[object Object]")
-            return false;
-        for (var p in func)
-            self[method][p] = func[p];
+         * @param String str 待检测字符串
+         * @param Number min 最小长度
+         * @param Number max 最大长度*/
+        min = min || 6;
+        max = max || 10;
+        if (str.length < min)
+            return {status: false, msg: '过短'};
+        if (str.length > max)
+            return {status: false, msg: '过长'};
+        return {status: true};
     };
-    p.addValidatorMap = function (name, dom, fun) {
+    p.sqlCheck = function (str) {
+        var reg = /\W+|SELECT|INSERT|UPDATE|CREATE|DROP|DELETE|null/gi;
+        var status = str.match(reg) == null;
+        if (status)
+            return {status: true};
+        else
+            return {status: false, msg: '非法'};
+    };
+    p.xssCheck = function (str) {
+        var reg = /\s+/ig;
+        str = str.replace(reg, '');
+        reg.compile(/<*(.*|\s*)>*|<*(.*|\s*)>*/ig);
+        var status = str.match(reg) == null;
+        if (status)
+            return {status: true};
+        else
+            return {status: false, msg: '非法'};
+    };
+    p.startCheck = function (checkFunc, str, target) {
         /*
-         * 1.@param object  {表单对象：验证器}验证器类型为数组元素为Function类型
-         * 2.@param [object],[array] obeject:表单对象,array:内部元素为Function类型,验证器函数*/
-        var args = Array.prototype.slice.call(arguments, 0),
-            length = args.length;
-        var tmp;
-        dom.validate = fun;
-        this.mapOfvalidator[name] = dom;
-    };
-    p.removeValidatorMap = function () {
-        var t = this.mapOfvalidator;
-        if (!arguments[0]) {
-            for (var p in t)
-                delete t[p];
-            return;
-        }
-        var args = Array.prototype.slice.call(arguments, 0),
-            length = args.length,
-            tmp, i, j;
-        if (length == 1) {
-            if (typeof args[0] == "string")
-                delete this.mapOfvalidator[args[0]];
-            if (Object.prototype.toString.call(args[0]) == "[object Array]") {
-                tmp = args[0];
-                for (i = 0, j = tmp.length; i < j; i++)
-                    delete this.mapOfvalidator[tmp[i]];
+         * @param Array checkFunc 需要用到的检测函数
+         * @param String str 待检测字符串*/
+        var count = checkFunc.length;//当检测计数等于count时即为检测成功
+        var c = 0, err, result;
+        for (var i = 0, j = count; i < j; i++) {
+            result = this[checkFunc[i] + 'Check'](str);
+            if (result.status) {
+                c++;
+            }
+            else {
+                err = result.msg;
+                break;
             }
         }
-    }
-})(dm);
+        var status = c == count;
+        if (!status) {
+            var checkConfig = this.checkConfig;
+            if (checkConfig['alert-icon'])
+                checkConfig['alert-icon'].css('display', 'block');
+            if (checkConfig['alert-sentence'])
+                checkConfig['alert-sentence'].css('display', 'block');
+        }
+    };
+    p.reset = function (target) {
+        target.siblings(this.checkConfig['alert-icon']).css('display', 'none');
+        target.siblings(this.checkConfig['alert-sentence']).css('display','none');
+    };
+    p.config = function (option) {
+        /*@option Object option {
+         'form':[require],
+         'formchild':[required],
+         'alert-icon':[optional],
+         'alert-sentence':[optional],
+         'submit':[required],
+         'validateOnBlur':[optional]},
+         'ajax':[optional],
+         'url':[require]*/
+        for (var p in option) {
+            this.checkConfig[p] = option[p];
+        }
+    };
+    p.registEvent = function () {
+        var form = this.checkConfig['form'];
+        var prefix = 'dm-validation-';
+        var isIE = navigator.userAgent.indexOf("MSIE 7.0") > 0;
+        var _this = this;
+        if (this.checkConfig.validateOnblur) {
+            form.on(isIE ? 'focusout' : 'blur', this.checkConfig['formchild'], function (e) {
+                var target = $(e.currentTarget);
+                var validators = target.attr(prefix + "validator").split(',');
+                _this.startCheck(validators, e.val(), target);
+            });
+            form.on(isIE ? 'focusin' : 'focus', this.checkConfig['formchild'], function (e) {
+                var target = $(e.currentTarget);
+                _this.reset(target);
+            });
+        }
+    };
+    $dm.registLib('formvalidator', validator);
+    /*
+     * 将前缀属性写在表单标签里
+     *1、dm-validation-validator需要的验证器用逗号隔开,
+     * 2、dm-validation-name表单的名字
+     * 3、dm-validation-length字符长度min:xx,max:xx*/
+})(dm, window.undefined);
