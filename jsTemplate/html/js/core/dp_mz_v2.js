@@ -96,7 +96,7 @@ define('dp_mz',['jQuery'],function(require){
                 /*
                  @param string arguments[0]  事件名称，如果要以命名空间形式，分隔符为:
                  例如a:b:c
-                 @param function arguments[0]... 传入事件处理函数的参数*/
+                 @param function arguments[1]... 传入事件处理函数的参数*/
                 var args = Array.prototype.slice.call(arguments, 0),
                     ev = args.shift();
                 var list;
@@ -533,5 +533,6 @@ define('dp_mz',['jQuery'],function(require){
                 return libs[name] ? libs[name] : root.undefined;
             }
         })(); //
+        module.exports=dm;
     })(window, $); //基于导入全局变量
 });
