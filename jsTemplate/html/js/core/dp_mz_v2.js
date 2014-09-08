@@ -1,4 +1,4 @@
-define('dp_mz',['jQuery'],function(require){
+define('dp_mz',['jQuery'],function(require,exports,module){
     var $=require('jQuery');
     (function(root, $) {
         if (!$) {
